@@ -147,6 +147,7 @@ func NewDevelopmentEncoderConfig() zapcore.EncoderConfig {
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTraceId:  zapcore.ContextTraceIdEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}

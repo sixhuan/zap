@@ -121,6 +121,7 @@ func TestJSONEncodeEntry(t *testing.T) {
 		StacktraceKey:  "S",
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTraceId:  zapcore.ContextTraceIdEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	})

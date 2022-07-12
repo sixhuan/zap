@@ -21,6 +21,7 @@
 package observer_test
 
 import (
+	"context"
 	"testing"
 	"time"
 
@@ -44,8 +45,9 @@ func TestObserver(t *testing.T) {
 	assert.NoError(t, observer.Sync(), "Unexpected failure in no-op Sync")
 
 	obs := zap.New(observer).With(zap.Int("i", 1))
-	obs.Info("foo")
-	obs.Debug("bar")
+	var ctx context.Context = nil
+	obs.Info(ctx, "foo")
+	obs.Debug(ctx, "bar")
 	want := []LoggedEntry{{
 		Entry:   zapcore.Entry{Level: zap.InfoLevel, Message: "foo"},
 		Context: []zapcore.Field{zap.Int("i", 1)},

@@ -94,13 +94,13 @@ func TestGlobalsConcurrentUse(t *testing.T) {
 	wg.Wait()
 }
 
-func TestNewStdLog(t *testing.T) {
-	withLogger(t, DebugLevel, []Option{AddCaller()}, func(l *Logger, logs *observer.ObservedLogs) {
-		std := NewStdLog(l)
-		std.Print("redirected")
-		checkStdLogMessage(t, "redirected", logs)
-	})
-}
+//func TestNewStdLog(t *testing.T) {
+//	withLogger(t, DebugLevel, []Option{AddCaller()}, func(l *Logger, logs *observer.ObservedLogs) {
+//		std := NewStdLog(l)
+//		std.Print("redirected")
+//		checkStdLogMessage(t, "redirected", logs)
+//	})
+//}
 
 func TestNewStdLogAt(t *testing.T) {
 	// include DPanicLevel here, but do not include Development in options

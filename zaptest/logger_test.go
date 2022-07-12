@@ -21,6 +21,7 @@
 package zaptest
 
 import (
+	"context"
 	"errors"
 	"fmt"
 	"io"
@@ -39,14 +40,14 @@ func TestTestLogger(t *testing.T) {
 	defer ts.AssertPassed()
 
 	log := NewLogger(ts)
-
-	log.Info("received work order")
-	log.Debug("starting work")
-	log.Warn("work may fail")
-	log.Error("work failed", zap.Error(errors.New("great sadness")))
+	ctx := context.Background()
+	log.Info(ctx, "received work order")
+	log.Debug(ctx, "starting work")
+	log.Warn(ctx, "work may fail")
+	log.Error(ctx, "work failed", zap.Error(errors.New("great sadness")))
 
 	assert.Panics(t, func() {
-		log.Panic("failed to do work")
+		log.Panic(ctx, "failed to do work")
 	}, "log.Panic should panic")
 
 	ts.AssertMessages(
@@ -63,14 +64,14 @@ func TestTestLoggerSupportsLevels(t *testing.T) {
 	defer ts.AssertPassed()
 
 	log := NewLogger(ts, Level(zap.WarnLevel))
-
-	log.Info("received work order")
-	log.Debug("starting work")
-	log.Warn("work may fail")
-	log.Error("work failed", zap.Error(errors.New("great sadness")))
+	ctx := context.Background()
+	log.Info(ctx, "received work order")
+	log.Debug(ctx, "starting work")
+	log.Warn(ctx, "work may fail")
+	log.Error(ctx, "work failed", zap.Error(errors.New("great sadness")))
 
 	assert.Panics(t, func() {
-		log.Panic("failed to do work")
+		log.Panic(ctx, "failed to do work")
 	}, "log.Panic should panic")
 
 	ts.AssertMessages(
@@ -83,16 +84,15 @@ func TestTestLoggerSupportsLevels(t *testing.T) {
 func TestTestLoggerSupportsWrappedZapOptions(t *testing.T) {
 	ts := newTestLogSpy(t)
 	defer ts.AssertPassed()
-
 	log := NewLogger(ts, WrapOptions(zap.AddCaller(), zap.Fields(zap.String("k1", "v1"))))
-
-	log.Info("received work order")
-	log.Debug("starting work")
-	log.Warn("work may fail")
-	log.Error("work failed", zap.Error(errors.New("great sadness")))
+	ctx := context.Background()
+	log.Info(ctx, "received work order")
+	log.Debug(ctx, "starting work")
+	log.Warn(ctx, "work may fail")
+	log.Error(ctx, "work failed", zap.Error(errors.New("great sadness")))
 
 	assert.Panics(t, func() {
-		log.Panic("failed to do work")
+		log.Panic(ctx, "failed to do work")
 	}, "log.Panic should panic")
 
 	ts.AssertMessages(
@@ -130,9 +130,8 @@ func TestTestLoggerErrorOutput(t *testing.T) {
 			zapcore.DebugLevel,
 		)
 	}))
-
-	log.Info("foo") // this fails
-
+	ctx := context.Background()
+	log.Info(ctx, "foo") // this fails
 	if assert.Len(t, ts.Messages, 1, "expected a log message") {
 		assert.Regexp(t, `write error: failed`, ts.Messages[0])
 	}

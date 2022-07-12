@@ -201,15 +201,15 @@ func ExampleObject() {
 	// {"level":"info","msg":"new request, inline","url":"/test","ip":"127.0.0.1","port":8080,"remote":{"ip":"127.0.0.1","port":31200}}
 }
 
-func ExampleNewStdLog() {
-	logger := zap.NewExample()
-	defer logger.Sync()
-
-	std := zap.NewStdLog(logger)
-	std.Print("standard logger wrapper")
-	// Output:
-	// {"level":"info","msg":"standard logger wrapper"}
-}
+//func ExampleNewStdLog() {
+//	logger := zap.NewExample()
+//	defer logger.Sync()
+//
+//	std := zap.NewStdLog(logger)
+//	std.Print("standard logger wrapper")
+//	// Output:
+//	// {"level":"info","msg":"standard logger wrapper"}
+//}
 
 func ExampleRedirectStdLog() {
 	logger := zap.NewExample()

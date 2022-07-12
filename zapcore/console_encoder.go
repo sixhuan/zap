@@ -80,6 +80,9 @@ func (c consoleEncoder) EncodeEntry(ent Entry, fields []Field) (*buffer.Buffer, 
 	if c.TimeKey != "" && c.EncodeTime != nil {
 		c.EncodeTime(ent.Time, arr)
 	}
+	if c.TraceIdKey != "" && c.EncodeTraceId != nil {
+		c.EncodeTraceId(ent.Ctx, arr)
+	}
 	if c.LevelKey != "" && c.EncodeLevel != nil {
 		c.EncodeLevel(ent.Level, arr)
 	}
