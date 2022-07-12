@@ -99,20 +99,17 @@ if err != nil {
 
 ## Installation
 
-### What does the error `expects import "go.uber.org/zap"` mean?
+### What does the error `expects import "github.com/sixhuan/zap"` mean?
 
-Either zap was installed incorrectly or you're referencing the wrong package
-name in your code.
+Either zap was installed incorrectly or you're referencing the wrong package name in your code.
 
-Zap's source code happens to be hosted on GitHub, but the [import
-path][import-path] is `go.uber.org/zap`. This gives us, the project
-maintainers, the freedom to move the source code if necessary. However, it
-means that you need to take a little care when installing and using the
-package.
+Zap's source code happens to be hosted on GitHub, but the [import path][import-path] is `github.com/sixhuan/zap`. This
+gives us, the project maintainers, the freedom to move the source code if necessary. However, it means that you need to
+take a little care when installing and using the package.
 
-If you follow two simple rules, everything should work: install zap with `go
-get -u go.uber.org/zap`, and always import it in your code with `import
-"go.uber.org/zap"`. Your code shouldn't contain *any* references to
+If you follow two simple rules, everything should work: install zap with `go get -u github.com/sixhuan/zap`, and always
+import it in your code with `import
+"github.com/sixhuan/zap"`. Your code shouldn't contain *any* references to
 `github.com/uber-go/zap`.
 
 ## Usage

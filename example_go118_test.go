@@ -23,7 +23,7 @@
 
 package zap_test
 
-import "go.uber.org/zap"
+import "github.com/sixhuan/zap"
 
 func ExampleObjects() {
 	logger := zap.NewExample()

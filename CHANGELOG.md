@@ -244,7 +244,7 @@ Enhancements:
 * [#577][]: Add a top-level alias for `zapcore.Field` to clean up GoDoc.
 
 Bugfixes:
-* [#574][]: Add a missing import comment to `go.uber.org/zap/buffer`.
+* [#574][]: Add a missing import comment to `github.com/sixhuan/zap/buffer`.
 
 Thanks to @DiSiqueira and @djui for their contributions to this release.
 
@@ -447,10 +447,9 @@ Thanks to @skipor and @chapsuk for their contributions to this release.
 This is the first release candidate for zap's stable release. There are multiple
 breaking changes and improvements from the pre-release version. Most notably:
 
-* **Zap's import path is now "go.uber.org/zap"** &mdash; all users will
-  need to update their code.
-* User-facing types and functions remain in the `zap` package. Code relevant
-  largely to extension authors is now in the `zapcore` package.
+* **Zap's import path is now "github.com/sixhuan/zap"** &mdash; all users will need to update their code.
+* User-facing types and functions remain in the `zap` package. Code relevant largely to extension authors is now in
+  the `zapcore` package.
 * The `zapcore.Core` type makes it easy for third-party packages to use zap's
   internals but provide a different user-facing API.
 * `Logger` is now a concrete type instead of an interface.

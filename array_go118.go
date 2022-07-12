@@ -23,7 +23,7 @@
 
 package zap
 
-import "go.uber.org/zap/zapcore"
+import "github.com/sixhuan/zap/zapcore"
 
 // Objects constructs a field with the given key, holding a list of the
 // provided objects that can be marshaled by Zap.

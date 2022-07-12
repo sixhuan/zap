@@ -4,7 +4,7 @@ Blazing fast, structured, leveled logging in Go.
 
 ## Installation
 
-`go get -u go.uber.org/zap`
+`go get -u github.com/sixhuan/zap`
 
 Note that zap only supports the two most recent minor versions of Go.
 
@@ -112,22 +112,27 @@ including you! Details are in the [contribution guide](CONTRIBUTING.md) and
 the [code of conduct](CODE_OF_CONDUCT.md). The zap maintainers keep an eye on
 issues and pull requests, but you can also report any negative conduct to
 oss-conduct@uber.com. That email list is a private, safe space; even the zap
-maintainers don't have access, so don't hesitate to hold us to a high
-standard.
+maintainers don't have access, so don't hesitate to hold us to a high standard.
 
 <hr>
 
 Released under the [MIT License](LICENSE.txt).
 
-<sup id="footnote-versions">1</sup> In particular, keep in mind that we may be
-benchmarking against slightly older versions of other packages. Versions are
-pinned in the [benchmarks/go.mod][] file. [↩](#anchor-versions)
+<sup id="footnote-versions">1</sup> In particular, keep in mind that we may be benchmarking against slightly older
+versions of other packages. Versions are pinned in the [benchmarks/go.mod][] file. [↩](#anchor-versions)
 
-[doc-img]: https://pkg.go.dev/badge/go.uber.org/zap
-[doc]: https://pkg.go.dev/go.uber.org/zap
+[doc-img]: https://pkg.go.dev/badge/github.com/sixhuan/zap
+
+[doc]: https://pkg.go.dev/github.com/sixhuan/zap
+
 [ci-img]: https://github.com/uber-go/zap/actions/workflows/go.yml/badge.svg
+
 [ci]: https://github.com/uber-go/zap/actions/workflows/go.yml
+
 [cov-img]: https://codecov.io/gh/uber-go/zap/branch/master/graph/badge.svg
+
 [cov]: https://codecov.io/gh/uber-go/zap
+
 [benchmarking suite]: https://github.com/uber-go/zap/tree/master/benchmarks
+
 [benchmarks/go.mod]: https://github.com/uber-go/zap/blob/master/benchmarks/go.mod

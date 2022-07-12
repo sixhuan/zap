@@ -25,10 +25,10 @@ import (
 	"sync"
 	"testing"
 
-	"go.uber.org/zap/internal/exit"
-	"go.uber.org/zap/internal/ztest"
-	"go.uber.org/zap/zapcore"
-	"go.uber.org/zap/zaptest/observer"
+	"github.com/sixhuan/zap/internal/exit"
+	"github.com/sixhuan/zap/internal/ztest"
+	"github.com/sixhuan/zap/zapcore"
+	"github.com/sixhuan/zap/zaptest/observer"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
@@ -413,8 +413,8 @@ func TestLoggerAddCallerFunction(t *testing.T) {
 		},
 		{
 			options:         opts(AddCaller()),
-			loggerFunction:  "go.uber.org/zap.infoLog",
-			sugaredFunction: "go.uber.org/zap.infoLogSugared",
+			loggerFunction:  "github.com/sixhuan/zap.infoLog",
+			sugaredFunction: "github.com/sixhuan/zap.infoLogSugared",
 		},
 		{
 			options:         opts(AddCaller(), WithCaller(false)),
@@ -423,8 +423,8 @@ func TestLoggerAddCallerFunction(t *testing.T) {
 		},
 		{
 			options:         opts(WithCaller(true)),
-			loggerFunction:  "go.uber.org/zap.infoLog",
-			sugaredFunction: "go.uber.org/zap.infoLogSugared",
+			loggerFunction:  "github.com/sixhuan/zap.infoLog",
+			sugaredFunction: "github.com/sixhuan/zap.infoLogSugared",
 		},
 		{
 			options:         opts(WithCaller(true), WithCaller(false)),
@@ -433,13 +433,13 @@ func TestLoggerAddCallerFunction(t *testing.T) {
 		},
 		{
 			options:         opts(AddCaller(), AddCallerSkip(1), AddCallerSkip(-1)),
-			loggerFunction:  "go.uber.org/zap.infoLog",
-			sugaredFunction: "go.uber.org/zap.infoLogSugared",
+			loggerFunction:  "github.com/sixhuan/zap.infoLog",
+			sugaredFunction: "github.com/sixhuan/zap.infoLogSugared",
 		},
 		{
 			options:         opts(AddCaller(), AddCallerSkip(2)),
-			loggerFunction:  "go.uber.org/zap.withLogger",
-			sugaredFunction: "go.uber.org/zap.withLogger",
+			loggerFunction:  "github.com/sixhuan/zap.withLogger",
+			sugaredFunction: "github.com/sixhuan/zap.withLogger",
 		},
 		{
 			options:         opts(AddCaller(), AddCallerSkip(2), AddCallerSkip(3)),
