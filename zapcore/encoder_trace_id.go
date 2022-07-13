@@ -19,3 +19,10 @@ func ContextTraceIdEncoder(ctx context.Context, enc PrimitiveArrayEncoder) {
 	}
 	enc.AppendString(traceId.(string))
 }
+
+func WithTraceIdEncoder(ctx context.Context, traceId string) context.Context {
+	if ctx != nil {
+		ctx = context.WithValue(ctx, traceIdKey{}, traceId)
+	}
+	return ctx
+}
