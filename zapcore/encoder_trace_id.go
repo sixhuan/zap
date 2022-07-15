@@ -9,7 +9,7 @@ var ctxTraceId = traceIdKey{}
 // A TraceIdEncoder serializes a Context to a primitive type.
 type TraceIdEncoder func(context.Context, PrimitiveArrayEncoder)
 
-func ContextTraceIdEncoder(ctx context.Context, enc PrimitiveArrayEncoder) {
+func DefaultContextTraceIdEncoder(ctx context.Context, enc PrimitiveArrayEncoder) {
 	if ctx == nil {
 		return
 	}
@@ -20,7 +20,7 @@ func ContextTraceIdEncoder(ctx context.Context, enc PrimitiveArrayEncoder) {
 	enc.AppendString(traceId.(string))
 }
 
-func WithTraceIdEncoder(ctx context.Context, traceId string) context.Context {
+func DefaultWithTraceIdFunc(ctx context.Context, traceId string) context.Context {
 	if ctx != nil {
 		ctx = context.WithValue(ctx, traceIdKey{}, traceId)
 	}

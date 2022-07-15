@@ -132,7 +132,7 @@ func NewExample(options ...Option) *Logger {
 		NameKey:        "logger",
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
-		EncodeTraceId:  zapcore.ContextTraceIdEncoder,
+		EncodeTraceId:  zapcore.DefaultContextTraceIdEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 	}
 	core := zapcore.NewCore(zapcore.NewJSONEncoder(encoderCfg), os.Stdout, DebugLevel)

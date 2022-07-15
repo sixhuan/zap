@@ -56,7 +56,7 @@ func testEncoderConfig() EncoderConfig {
 		StacktraceKey:  "stacktrace",
 		LineEnding:     "\n",
 		EncodeTime:     EpochTimeEncoder,
-		EncodeTraceId:  ContextTraceIdEncoder,
+		EncodeTraceId:  DefaultContextTraceIdEncoder,
 		EncodeLevel:    LowercaseLevelEncoder,
 		EncodeDuration: SecondsDurationEncoder,
 		EncodeCaller:   ShortCallerEncoder,
@@ -66,7 +66,7 @@ func testEncoderConfig() EncoderConfig {
 func humanEncoderConfig() EncoderConfig {
 	cfg := testEncoderConfig()
 	cfg.EncodeTime = ISO8601TimeEncoder
-	cfg.EncodeTraceId = ContextTraceIdEncoder
+	cfg.EncodeTraceId = DefaultContextTraceIdEncoder
 	cfg.EncodeLevel = CapitalLevelEncoder
 	cfg.EncodeDuration = StringDurationEncoder
 	return cfg
