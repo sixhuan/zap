@@ -268,6 +268,13 @@ func FullCallerEncoder(caller EntryCaller, enc PrimitiveArrayEncoder) {
 	enc.AppendString(caller.String())
 }
 
+// MiddleCallerEncoder serializes a caller in package/file:line:function format, trimming
+// all but the final directory from the full path.
+func MiddleCallerEncoder(caller EntryCaller, enc PrimitiveArrayEncoder) {
+	// TODO: consider using a byte-oriented API to save an allocation.
+	enc.AppendString(caller.TrimmedPath())
+}
+
 // ShortCallerEncoder serializes a caller in package/file:line format, trimming
 // all but the final directory from the full path.
 func ShortCallerEncoder(caller EntryCaller, enc PrimitiveArrayEncoder) {
