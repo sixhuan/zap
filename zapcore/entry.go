@@ -118,15 +118,11 @@ func (ec EntryCaller) MiddlePath() string {
 	// Find the last separator.
 	//
 	idx := strings.LastIndexByte(ec.File, '/')
-	if idx < 0 {
+	if idx == -1 {
 		return ec.FullPath()
 	}
-	// Find the penultimate separator.
-	//idx = strings.LastIndexByte(ec.File[:idx], '/')
-	//if idx == -1 {
-	//	return ec.FullPath()
-	//}
 	buf := bufferpool.Get()
+	//buf.AppendString("[ ")
 	// Keep everything after the penultimate separator.
 	buf.AppendString(ec.File[idx+1:])
 	buf.AppendByte(':')
@@ -134,11 +130,10 @@ func (ec EntryCaller) MiddlePath() string {
 	buf.AppendByte(':')
 	idx = strings.LastIndexByte(ec.Function, '.')
 	if idx < 0 {
-		buf.AppendString(ec.Function[idx+1:])
-	} else {
 		buf.AppendString(ec.Function)
 	}
-	buf.AppendString(ec.Function)
+	buf.AppendString(ec.Function[idx+1:])
+	//buf.AppendString(" ]")
 	caller := buf.String()
 	buf.Free()
 	return caller
