@@ -22,6 +22,7 @@ package zap_test
 
 import (
 	"bytes"
+	"context"
 	"encoding/json"
 	"os"
 	"os/exec"
@@ -47,9 +48,10 @@ var _zapPackages = []string{
 }
 
 func TestStacktraceFiltersZapLog(t *testing.T) {
+	ctx := context.Background()
 	withLogger(t, func(logger *zap.Logger, out *bytes.Buffer) {
-		logger.Error("test log")
-		logger.Sugar().Error("sugar test log")
+		logger.Error(ctx, "test log")
+		logger.Sugar().Error(ctx, "sugar test log")
 
 		require.Contains(t, out.String(), "TestStacktraceFiltersZapLog", "Should not strip out non-zap import")
 		verifyNoZap(t, out.String())
@@ -57,13 +59,14 @@ func TestStacktraceFiltersZapLog(t *testing.T) {
 }
 
 func TestStacktraceFiltersZapMarshal(t *testing.T) {
+	ctx := context.Background()
 	withLogger(t, func(logger *zap.Logger, out *bytes.Buffer) {
 		marshal := func(enc zapcore.ObjectEncoder) error {
-			logger.Warn("marshal caused warn")
+			logger.Warn(ctx, "marshal caused warn")
 			enc.AddString("f", "v")
 			return nil
 		}
-		logger.Error("test log", zap.Object("obj", zapcore.ObjectMarshalerFunc(marshal)))
+		logger.Error(ctx, "test log", zap.Object("obj", zapcore.ObjectMarshalerFunc(marshal)))
 
 		logs := out.String()
 
@@ -120,9 +123,10 @@ func TestStacktraceFiltersVendorZap(t *testing.T) {
 }
 
 func TestStacktraceWithoutCallerSkip(t *testing.T) {
+	ctx := context.Background()
 	withLogger(t, func(logger *zap.Logger, out *bytes.Buffer) {
 		func() {
-			logger.Error("test log")
+			logger.Error(ctx, "test log")
 		}()
 
 		require.Contains(t, out.String(), "TestStacktraceWithoutCallerSkip.", "Should not skip too much")
@@ -131,10 +135,11 @@ func TestStacktraceWithoutCallerSkip(t *testing.T) {
 }
 
 func TestStacktraceWithCallerSkip(t *testing.T) {
+	ctx := context.Background()
 	withLogger(t, func(logger *zap.Logger, out *bytes.Buffer) {
 		logger = logger.WithOptions(zap.AddCallerSkip(2))
 		func() {
-			logger.Error("test log")
+			logger.Error(ctx, "test log")
 		}()
 
 		require.NotContains(t, out.String(), "TestStacktraceWithCallerSkip.", "Should skip as requested by caller skip")

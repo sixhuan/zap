@@ -21,6 +21,7 @@
 package zap
 
 import (
+	"context"
 	"io"
 	"os"
 	"testing"
@@ -32,6 +33,7 @@ import (
 )
 
 func TestConfig(t *testing.T) {
+	ctx := context.Background()
 	tests := []struct {
 		desc     string
 		cfg      Config
@@ -70,9 +72,9 @@ func TestConfig(t *testing.T) {
 			logger, err := tt.cfg.Build(Hooks(hook))
 			require.NoError(t, err, "Unexpected error constructing logger.")
 
-			logger.Debug("debug")
-			logger.Info("info")
-			logger.Warn("warn")
+			logger.Debug(ctx, "debug")
+			logger.Info(ctx, "info")
+			logger.Warn(ctx, "warn")
 
 			byteContents, err := io.ReadAll(temp)
 			require.NoError(t, err, "Couldn't read log contents from temp file.")
@@ -80,7 +82,7 @@ func TestConfig(t *testing.T) {
 			assert.Regexp(t, tt.expectRe, logs, "Unexpected log output.")
 
 			for i := 0; i < 200; i++ {
-				logger.Info("sampling")
+				logger.Info(ctx, "sampling")
 			}
 			assert.Equal(t, tt.expectN, count.Load(), "Hook called an unexpected number of times.")
 		})
@@ -161,6 +163,7 @@ func makeSamplerCountingHook() (h func(zapcore.Entry, zapcore.SamplingDecision),
 }
 
 func TestConfigWithSamplingHook(t *testing.T) {
+	ctx := context.Background()
 	shook, dcount, scount := makeSamplerCountingHook()
 	cfg := Config{
 		Level:       NewAtomicLevelAt(InfoLevel),
@@ -196,9 +199,9 @@ func TestConfigWithSamplingHook(t *testing.T) {
 	logger, err := cfg.Build()
 	require.NoError(t, err, "Unexpected error constructing logger.")
 
-	logger.Debug("debug")
-	logger.Info("info")
-	logger.Warn("warn")
+	logger.Debug(ctx, "debug")
+	logger.Info(ctx, "info")
+	logger.Warn(ctx, "warn")
 
 	byteContents, err := io.ReadAll(temp)
 	require.NoError(t, err, "Couldn't read log contents from temp file.")
@@ -206,7 +209,7 @@ func TestConfigWithSamplingHook(t *testing.T) {
 	assert.Regexp(t, expectRe, logs, "Unexpected log output.")
 
 	for i := 0; i < 200; i++ {
-		logger.Info("sampling")
+		logger.Info(ctx, "sampling")
 	}
 	assert.Equal(t, int64(expectDropped), dcount.Load())
 	assert.Equal(t, int64(expectSampled), scount.Load())

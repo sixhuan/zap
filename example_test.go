@@ -21,9 +21,9 @@
 package zap_test
 
 import (
+	"context"
 	"encoding/json"
 	"io"
-	"log"
 	"os"
 	"time"
 
@@ -32,6 +32,7 @@ import (
 )
 
 func Example_presets() {
+	ctx := context.Background()
 	// Using zap's preset constructors is the simplest way to get a feel for the
 	// package, but they don't allow much customization.
 	logger := zap.NewExample() // or NewProduction, or NewDevelopment
@@ -42,18 +43,18 @@ func Example_presets() {
 	// In most circumstances, use the SugaredLogger. It's 4-10x faster than most
 	// other structured logging packages and has a familiar, loosely-typed API.
 	sugar := logger.Sugar()
-	sugar.Infow("Failed to fetch URL.",
+	sugar.Infow(ctx, "Failed to fetch URL.",
 		// Structured context as loosely typed key-value pairs.
 		"url", url,
 		"attempt", 3,
 		"backoff", time.Second,
 	)
-	sugar.Infof("Failed to fetch URL: %s", url)
+	sugar.Infof(ctx, "Failed to fetch URL: %s", url)
 
 	// In the unusual situations where every microsecond matters, use the
 	// Logger. It's even faster than the SugaredLogger, but only supports
 	// structured logging.
-	logger.Info("Failed to fetch URL.",
+	logger.Info(ctx, "Failed to fetch URL.",
 		// Structured context as strongly typed fields.
 		zap.String("url", url),
 		zap.Int("attempt", 3),
@@ -66,6 +67,7 @@ func Example_presets() {
 }
 
 func Example_basicConfiguration() {
+	ctx := context.Background()
 	// For some users, the presets offered by the NewProduction, NewDevelopment,
 	// and NewExample constructors won't be appropriate. For most of those
 	// users, the bundled Config struct offers the right balance of flexibility
@@ -94,12 +96,13 @@ func Example_basicConfiguration() {
 	logger := zap.Must(cfg.Build())
 	defer logger.Sync()
 
-	logger.Info("logger construction succeeded")
+	logger.Info(ctx, "logger construction succeeded")
 	// Output:
 	// {"level":"info","message":"logger construction succeeded","foo":"bar"}
 }
 
 func Example_advancedConfiguration() {
+	ctx := context.Background()
 	// The bundled Config struct only supports the most common configuration
 	// options. More complex needs, like splitting logs between multiple files
 	// or writing to non-file outputs, require use of the zapcore package.
@@ -147,17 +150,18 @@ func Example_advancedConfiguration() {
 	// From a zapcore.Core, it's easy to construct a Logger.
 	logger := zap.New(core)
 	defer logger.Sync()
-	logger.Info("constructed a logger")
+	logger.Info(ctx, "constructed a logger")
 }
 
 func ExampleNamespace() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
 	logger.With(
 		zap.Namespace("metrics"),
 		zap.Int("counter", 1),
-	).Info("tracked some metrics")
+	).Info(ctx, "tracked some metrics")
 	// Output:
 	// {"level":"info","msg":"tracked some metrics","metrics":{"counter":1}}
 }
@@ -186,6 +190,7 @@ func (r *request) MarshalLogObject(enc zapcore.ObjectEncoder) error {
 }
 
 func ExampleObject() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
@@ -194,8 +199,8 @@ func ExampleObject() {
 		Listen: addr{"127.0.0.1", 8080},
 		Remote: addr{"127.0.0.1", 31200},
 	}
-	logger.Info("new request, in nested object", zap.Object("req", req))
-	logger.Info("new request, inline", zap.Inline(req))
+	logger.Info(ctx, "new request, in nested object", zap.Object("req", req))
+	logger.Info(ctx, "new request, inline", zap.Inline(req))
 	// Output:
 	// {"level":"info","msg":"new request, in nested object","req":{"url":"/test","ip":"127.0.0.1","port":8080,"remote":{"ip":"127.0.0.1","port":31200}}}
 	// {"level":"info","msg":"new request, inline","url":"/test","ip":"127.0.0.1","port":8080,"remote":{"ip":"127.0.0.1","port":31200}}
@@ -211,31 +216,33 @@ func ExampleObject() {
 //	// {"level":"info","msg":"standard logger wrapper"}
 //}
 
-func ExampleRedirectStdLog() {
-	logger := zap.NewExample()
-	defer logger.Sync()
-
-	undo := zap.RedirectStdLog(logger)
-	defer undo()
-
-	log.Print("redirected standard library")
-	// Output:
-	// {"level":"info","msg":"redirected standard library"}
-}
+//func ExampleRedirectStdLog() {
+//	logger := zap.NewExample()
+//	defer logger.Sync()
+//
+//	undo := zap.RedirectStdLog(logger)
+//	defer undo()
+//
+//	log.Print("redirected standard library")
+//	// Output:
+//	// {"level":"info","msg":"redirected standard library"}
+//}
 
 func ExampleReplaceGlobals() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
 	undo := zap.ReplaceGlobals(logger)
 	defer undo()
 
-	zap.L().Info("replaced zap's global loggers")
+	zap.L().Info(ctx, "replaced zap's global loggers")
 	// Output:
 	// {"level":"info","msg":"replaced zap's global loggers"}
 }
 
 func ExampleAtomicLevel() {
+	ctx := context.Background()
 	atom := zap.NewAtomicLevel()
 
 	// To keep the example deterministic, disable timestamps in the output.
@@ -249,15 +256,16 @@ func ExampleAtomicLevel() {
 	))
 	defer logger.Sync()
 
-	logger.Info("info logging enabled")
+	logger.Info(ctx, "info logging enabled")
 
 	atom.SetLevel(zap.ErrorLevel)
-	logger.Info("info logging disabled")
+	logger.Info(ctx, "info logging disabled")
 	// Output:
 	// {"level":"info","msg":"info logging enabled"}
 }
 
 func ExampleAtomicLevel_config() {
+	ctx := context.Background()
 	// The zap.Config struct includes an AtomicLevel. To use it, keep a
 	// reference to the Config.
 	rawJSON := []byte(`{
@@ -278,19 +286,20 @@ func ExampleAtomicLevel_config() {
 	logger := zap.Must(cfg.Build())
 	defer logger.Sync()
 
-	logger.Info("info logging enabled")
+	logger.Info(ctx, "info logging enabled")
 
 	cfg.Level.SetLevel(zap.ErrorLevel)
-	logger.Info("info logging disabled")
+	logger.Info(ctx, "info logging disabled")
 	// Output:
 	// {"level":"info","message":"info logging enabled"}
 }
 
 func ExampleLogger_Check() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
-	if ce := logger.Check(zap.DebugLevel, "debugging"); ce != nil {
+	if ce := logger.Check(ctx, zap.DebugLevel, "debugging"); ce != nil {
 		// If debug-level log output isn't enabled or if zap's sampling would have
 		// dropped this log entry, we don't allocate the slice that holds these
 		// fields.
@@ -305,18 +314,19 @@ func ExampleLogger_Check() {
 }
 
 func ExampleLogger_Named() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
 	// By default, Loggers are unnamed.
-	logger.Info("no name")
+	logger.Info(ctx, "no name")
 
 	// The first call to Named sets the Logger name.
 	main := logger.Named("main")
-	main.Info("main logger")
+	main.Info(ctx, "main logger")
 
 	// Additional calls to Named create a period-separated path.
-	main.Named("subpackage").Info("sub-logger")
+	main.Named("subpackage").Info(ctx, "sub-logger")
 	// Output:
 	// {"level":"info","msg":"no name"}
 	// {"level":"info","logger":"main","msg":"main logger"}
@@ -324,6 +334,7 @@ func ExampleLogger_Named() {
 }
 
 func ExampleWrapCore_replace() {
+	ctx := context.Background()
 	// Replacing a Logger's core can alter fundamental behaviors.
 	// For example, it can convert a Logger to a no-op.
 	nop := zap.WrapCore(func(zapcore.Core) zapcore.Core {
@@ -333,15 +344,16 @@ func ExampleWrapCore_replace() {
 	logger := zap.NewExample()
 	defer logger.Sync()
 
-	logger.Info("working")
-	logger.WithOptions(nop).Info("no-op")
-	logger.Info("original logger still works")
+	logger.Info(ctx, "working")
+	logger.WithOptions(nop).Info(ctx, "no-op")
+	logger.Info(ctx, "original logger still works")
 	// Output:
 	// {"level":"info","msg":"working"}
 	// {"level":"info","msg":"original logger still works"}
 }
 
 func ExampleWrapCore_wrap() {
+	ctx := context.Background()
 	// Wrapping a Logger's core can extend its functionality. As a trivial
 	// example, it can double-write all logs.
 	doubled := zap.WrapCore(func(c zapcore.Core) zapcore.Core {
@@ -351,8 +363,8 @@ func ExampleWrapCore_wrap() {
 	logger := zap.NewExample()
 	defer logger.Sync()
 
-	logger.Info("single")
-	logger.WithOptions(doubled).Info("doubled")
+	logger.Info(ctx, "single")
+	logger.WithOptions(doubled).Info(ctx, "doubled")
 	// Output:
 	// {"level":"info","msg":"single"}
 	// {"level":"info","msg":"doubled"}
