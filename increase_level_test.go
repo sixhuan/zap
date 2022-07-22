@@ -22,11 +22,12 @@ package zap
 
 import (
 	"bytes"
+	"context"
 	"testing"
 
+	"github.com/sixhuan/zap/zapcore"
+	"github.com/sixhuan/zap/zaptest/observer"
 	"github.com/stretchr/testify/assert"
-	"go.uber.org/zap/zapcore"
-	"go.uber.org/zap/zaptest/observer"
 )
 
 func newLoggedEntry(level zapcore.Level, msg string, fields ...zapcore.Field) observer.LoggedEntry {
@@ -40,17 +41,18 @@ func newLoggedEntry(level zapcore.Level, msg string, fields ...zapcore.Field) ob
 }
 
 func TestIncreaseLevelTryDecrease(t *testing.T) {
+	ctx := context.Background()
 	errorOut := &bytes.Buffer{}
 	opts := []Option{
 		ErrorOutput(zapcore.AddSync(errorOut)),
 	}
 	withLogger(t, WarnLevel, opts, func(logger *Logger, logs *observer.ObservedLogs) {
-		logger.Warn("original warn log")
+		logger.Warn(ctx, "original warn log")
 
 		debugLogger := logger.WithOptions(IncreaseLevel(DebugLevel))
-		debugLogger.Debug("ignored debug log")
-		debugLogger.Warn("increase level warn log")
-		debugLogger.Error("increase level error log")
+		debugLogger.Debug(ctx, "ignored debug log")
+		debugLogger.Warn(ctx, "increase level warn log")
+		debugLogger.Error(ctx, "increase level error log")
 
 		assert.Equal(t, []observer.LoggedEntry{
 			newLoggedEntry(WarnLevel, "original warn log"),
@@ -70,18 +72,19 @@ func TestIncreaseLevel(t *testing.T) {
 	opts := []Option{
 		ErrorOutput(zapcore.AddSync(errorOut)),
 	}
+	ctx := context.Background()
 	withLogger(t, WarnLevel, opts, func(logger *Logger, logs *observer.ObservedLogs) {
-		logger.Warn("original warn log")
+		logger.Warn(ctx, "original warn log")
 
 		errorLogger := logger.WithOptions(IncreaseLevel(ErrorLevel))
-		errorLogger.Debug("ignored debug log")
-		errorLogger.Warn("ignored warn log")
-		errorLogger.Error("increase level error log")
+		errorLogger.Debug(ctx, "ignored debug log")
+		errorLogger.Warn(ctx, "ignored warn log")
+		errorLogger.Error(ctx, "increase level error log")
 
 		withFields := errorLogger.With(String("k", "v"))
-		withFields.Debug("ignored debug log with fields")
-		withFields.Warn("ignored warn log with fields")
-		withFields.Error("increase level error log with fields")
+		withFields.Debug(ctx, "ignored debug log with fields")
+		withFields.Warn(ctx, "ignored warn log with fields")
+		withFields.Error(ctx, "increase level error log with fields")
 
 		assert.Equal(t, []observer.LoggedEntry{
 			newLoggedEntry(WarnLevel, "original warn log"),

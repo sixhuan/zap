@@ -27,8 +27,8 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
+	"github.com/sixhuan/zap"
+	"github.com/sixhuan/zap/zapcore"
 )
 
 // TestJSONEncodeEntry is an more "integrated" test that makes it easier to get
@@ -121,6 +121,7 @@ func TestJSONEncodeEntry(t *testing.T) {
 		StacktraceKey:  "S",
 		EncodeLevel:    zapcore.LowercaseLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTraceId:  zapcore.DefaultContextTraceIdEncoder,
 		EncodeDuration: zapcore.SecondsDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	})

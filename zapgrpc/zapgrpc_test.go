@@ -24,9 +24,9 @@ import (
 	"fmt"
 	"testing"
 
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	"go.uber.org/zap/zaptest/observer"
+	"github.com/sixhuan/zap"
+	"github.com/sixhuan/zap/zapcore"
+	"github.com/sixhuan/zap/zaptest/observer"
 
 	"github.com/stretchr/testify/require"
 )
@@ -125,8 +125,8 @@ func TestLoggerErrorExpected(t *testing.T) {
 		"foo bar",
 		"s1 s2 1 2 3 s3 4 s5 6",
 	}, func(logger *Logger) {
-		logger.Error("hello")
-		logger.Error("s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
+		logger.Error(ctx, "hello")
+		logger.Error(ctx, "s1", "s2", 1, 2, 3, "s3", 4, "s5", 6)
 		logger.Errorf("%s world", "hello")
 		logger.Errorln()
 		logger.Errorln("foo")

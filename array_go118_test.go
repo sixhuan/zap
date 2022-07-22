@@ -27,9 +27,9 @@ import (
 	"errors"
 	"testing"
 
+	"github.com/sixhuan/zap/zapcore"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zapcore"
 )
 
 func TestObjectsAndObjectValues(t *testing.T) {

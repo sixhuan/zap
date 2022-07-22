@@ -23,15 +23,19 @@
 
 package zap_test
 
-import "go.uber.org/zap"
+import (
+	"context"
+	"github.com/sixhuan/zap"
+)
 
 func ExampleObjects() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
 	// Use the Objects field constructor when you have a list of objects,
 	// all of which implement zapcore.ObjectMarshaler.
-	logger.Debug("opening connections",
+	logger.Debug(ctx, "opening connections",
 		zap.Objects("addrs", []addr{
 			{IP: "123.45.67.89", Port: 4040},
 			{IP: "127.0.0.1", Port: 4041},
@@ -42,13 +46,14 @@ func ExampleObjects() {
 }
 
 func ExampleObjectValues() {
+	ctx := context.Background()
 	logger := zap.NewExample()
 	defer logger.Sync()
 
 	// Use the ObjectValues field constructor when you have a list of
 	// objects that do not implement zapcore.ObjectMarshaler directly,
 	// but on their pointer receivers.
-	logger.Debug("starting tunnels",
+	logger.Debug(ctx, "starting tunnels",
 		zap.ObjectValues("addrs", []request{
 			{
 				URL:    "/foo",

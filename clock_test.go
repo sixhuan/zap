@@ -21,12 +21,13 @@
 package zap
 
 import (
+	"context"
 	"testing"
 	"time"
 
+	"github.com/sixhuan/zap/zaptest/observer"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
-	"go.uber.org/zap/zaptest/observer"
 )
 
 type constantClock time.Time
@@ -37,10 +38,11 @@ func (c constantClock) NewTicker(d time.Duration) *time.Ticker {
 }
 
 func TestWithClock(t *testing.T) {
+	ctx := context.Background()
 	date := time.Date(2077, 1, 23, 10, 15, 13, 441, time.UTC)
 	clock := constantClock(date)
 	withLogger(t, DebugLevel, []Option{WithClock(clock)}, func(log *Logger, logs *observer.ObservedLogs) {
-		log.Info("")
+		log.Info(ctx, "")
 		require.Equal(t, 1, logs.Len(), "Expected only one log entry to be written.")
 		assert.Equal(t, date, logs.All()[0].Time, "Unexpected entry time.")
 	})

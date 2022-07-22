@@ -25,7 +25,7 @@ import (
 	"sort"
 	"time"
 
-	"go.uber.org/zap/zapcore"
+	"github.com/sixhuan/zap/zapcore"
 )
 
 // SamplingConfig sets a sampling strategy for the logger. Sampling caps the
@@ -147,6 +147,7 @@ func NewDevelopmentEncoderConfig() zapcore.EncoderConfig {
 		LineEnding:     zapcore.DefaultLineEnding,
 		EncodeLevel:    zapcore.CapitalLevelEncoder,
 		EncodeTime:     zapcore.ISO8601TimeEncoder,
+		EncodeTraceId:  zapcore.DefaultContextTraceIdEncoder,
 		EncodeDuration: zapcore.StringDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder,
 	}

@@ -30,7 +30,7 @@ import (
 	"github.com/stretchr/testify/require"
 	"gopkg.in/yaml.v3"
 
-	. "go.uber.org/zap/zapcore"
+	. "github.com/sixhuan/zap/zapcore"
 )
 
 var (
@@ -56,6 +56,7 @@ func testEncoderConfig() EncoderConfig {
 		StacktraceKey:  "stacktrace",
 		LineEnding:     "\n",
 		EncodeTime:     EpochTimeEncoder,
+		EncodeTraceId:  DefaultContextTraceIdEncoder,
 		EncodeLevel:    LowercaseLevelEncoder,
 		EncodeDuration: SecondsDurationEncoder,
 		EncodeCaller:   ShortCallerEncoder,
@@ -65,6 +66,7 @@ func testEncoderConfig() EncoderConfig {
 func humanEncoderConfig() EncoderConfig {
 	cfg := testEncoderConfig()
 	cfg.EncodeTime = ISO8601TimeEncoder
+	cfg.EncodeTraceId = DefaultContextTraceIdEncoder
 	cfg.EncodeLevel = CapitalLevelEncoder
 	cfg.EncodeDuration = StringDurationEncoder
 	return cfg
@@ -107,6 +109,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -127,6 +130,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				LineEnding:     base.LineEnding,
 				SkipLineEnding: true,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -146,6 +150,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -165,6 +170,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -184,6 +190,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -203,6 +210,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -222,6 +230,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -241,6 +250,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -260,6 +270,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  OmitKey,
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -279,6 +290,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     func(t time.Time, enc PrimitiveArrayEncoder) { enc.AppendString(t.String()) },
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -307,6 +319,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: StringDurationEncoder,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -335,6 +348,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    CapitalLevelEncoder,
 				EncodeCaller:   base.EncodeCaller,
@@ -354,6 +368,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -374,6 +389,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -401,6 +417,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     func(time.Time, PrimitiveArrayEncoder) {},
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -421,6 +438,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: func(time.Duration, PrimitiveArrayEncoder) {},
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -441,6 +459,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    func(Level, PrimitiveArrayEncoder) {},
 				EncodeCaller:   base.EncodeCaller,
@@ -460,6 +479,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   func(EntryCaller, PrimitiveArrayEncoder) {},
@@ -479,6 +499,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     base.LineEnding,
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -499,6 +520,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				StacktraceKey:  "S",
 				LineEnding:     "\r\n",
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,
@@ -517,6 +539,7 @@ func TestEncoderConfiguration(t *testing.T) {
 				FunctionKey:    "F",
 				StacktraceKey:  "S",
 				EncodeTime:     base.EncodeTime,
+				EncodeTraceId:  base.EncodeTraceId,
 				EncodeDuration: base.EncodeDuration,
 				EncodeLevel:    base.EncodeLevel,
 				EncodeCaller:   base.EncodeCaller,

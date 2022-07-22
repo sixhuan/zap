@@ -21,15 +21,16 @@
 package observer_test
 
 import (
+	"context"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"go.uber.org/zap"
-	"go.uber.org/zap/zapcore"
-	. "go.uber.org/zap/zaptest/observer"
+	"github.com/sixhuan/zap"
+	"github.com/sixhuan/zap/zapcore"
+	. "github.com/sixhuan/zap/zaptest/observer"
 )
 
 func assertEmpty(t testing.TB, logs *ObservedLogs) {
@@ -44,8 +45,9 @@ func TestObserver(t *testing.T) {
 	assert.NoError(t, observer.Sync(), "Unexpected failure in no-op Sync")
 
 	obs := zap.New(observer).With(zap.Int("i", 1))
-	obs.Info("foo")
-	obs.Debug("bar")
+	var ctx context.Context = nil
+	obs.Info(ctx, "foo")
+	obs.Debug(ctx, "bar")
 	want := []LoggedEntry{{
 		Entry:   zapcore.Entry{Level: zap.InfoLevel, Message: "foo"},
 		Context: []zapcore.Field{zap.Int("i", 1)},

@@ -25,7 +25,7 @@ import (
 	"io"
 	"time"
 
-	"go.uber.org/zap/buffer"
+	"github.com/sixhuan/zap/buffer"
 )
 
 // DefaultLineEnding defines the default line ending when writing logs.
@@ -268,6 +268,13 @@ func FullCallerEncoder(caller EntryCaller, enc PrimitiveArrayEncoder) {
 	enc.AppendString(caller.String())
 }
 
+// MiddleCallerEncoder serializes a caller in package/file:line:function format, trimming
+// all but the final directory from the full path.
+func MiddleCallerEncoder(caller EntryCaller, enc PrimitiveArrayEncoder) {
+	// TODO: consider using a byte-oriented API to save an allocation.
+	enc.AppendString(caller.MiddlePath())
+}
+
 // ShortCallerEncoder serializes a caller in package/file:line format, trimming
 // all but the final directory from the full path.
 func ShortCallerEncoder(caller EntryCaller, enc PrimitiveArrayEncoder) {
@@ -316,6 +323,7 @@ type EncoderConfig struct {
 	MessageKey     string `json:"messageKey" yaml:"messageKey"`
 	LevelKey       string `json:"levelKey" yaml:"levelKey"`
 	TimeKey        string `json:"timeKey" yaml:"timeKey"`
+	TraceIdKey     string `json:"traceIdKey" yaml:"traceIdKey"`
 	NameKey        string `json:"nameKey" yaml:"nameKey"`
 	CallerKey      string `json:"callerKey" yaml:"callerKey"`
 	FunctionKey    string `json:"functionKey" yaml:"functionKey"`
@@ -327,6 +335,7 @@ type EncoderConfig struct {
 	// seconds since epoch, while others may prefer ISO8601 strings.
 	EncodeLevel    LevelEncoder    `json:"levelEncoder" yaml:"levelEncoder"`
 	EncodeTime     TimeEncoder     `json:"timeEncoder" yaml:"timeEncoder"`
+	EncodeTraceId  TraceIdEncoder  `json:"traceIdEncoder" yaml:"traceIdEncoder"`
 	EncodeDuration DurationEncoder `json:"durationEncoder" yaml:"durationEncoder"`
 	EncodeCaller   CallerEncoder   `json:"callerEncoder" yaml:"callerEncoder"`
 	// Unlike the other primitive type encoders, EncodeName is optional. The
